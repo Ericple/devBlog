@@ -1,0 +1,28 @@
+disabled = false
+languageCode = "zh-CN"
+languageName = "简体中文"
+weight = 1
+title = "肥肥狸猫的小窝"
+
+[params]
+displayName = "简体中文"
+isoCode = "zh-CN"
+rtl = false
+dateFormat = "2 January 2006"
+logo = "img/avatar_transparent.png"
+# secondaryLogo = "img/secondary-logo.png"
+# description = "My awesome website"
+# copyright = "Copy, _right?_ :thinking_face:"
+
+[params.author]
+name = "PeerCAT"
+email = "dev@peercat.cn"
+image = "img/avatar.jpg"
+imageQuality = 96
+headline = "HarmonyOS布道师"
+# bio = "A little bit about you"
+links = [
+  { email = "mailto:dev@peercat.cn" },
+  { dev = "https://developer.huawei.com/home/program/advocates/member/a7b0016653f340f79dbdf6f6686d1f3d" },
+  { github = "https://github.com/Ericple" },
+]
