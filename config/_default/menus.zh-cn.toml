@@ -21,6 +21,11 @@ weight = 20
 pageRef = "/one-bill"
 
 [[main]]
+name = "Log4a"
+weight = 20
+pageRef = "/log4a"
+
+[[main]]
 name = "文章"
 weight = 20
 pageRef = "/posts"
