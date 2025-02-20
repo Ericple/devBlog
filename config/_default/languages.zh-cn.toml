@@ -12,14 +12,14 @@ dateFormat = "2 January 2006"
 logo = "img/avatar_transparent.png"
 # secondaryLogo = "img/secondary-logo.png"
 # description = "My awesome website"
-# copyright = "Copy, _right?_ :thinking_face:"
+copyright = '© 2025 PeerCAT <a href="https://beian.mps.gov.cn/#/query/webSearch">辽公网安备21021102001102号</a> <a href="https://beian.miit.gov.cn/">辽ICP备2022002785号</a>'
 
 [params.author]
 name = "PeerCAT"
 email = "dev@peercat.cn"
 image = "img/avatar.jpg"
 imageQuality = 96
-headline = "HarmonyOS布道师"
+headline = "自由开发者，HarmonyOS布道师"
 # bio = "A little bit about you"
 links = [
   { email = "mailto:dev@peercat.cn" },

@@ -9,12 +9,6 @@
 # By default the menu is ordered alphabetically. This can be
 # overridden by providing a weight value. The menu will then be
 # ordered by weight from lowest to highest.
-
-# [[main]]
-# name = "TAGS"
-# pageRef = "/tags"
-# weight = 10
-
 [[main]]
 name = "一日记账"
 weight = 20
@@ -26,7 +20,7 @@ weight = 20
 pageRef = "/log4a"
 
 [[main]]
-name = "文章"
+name = "博客"
 weight = 20
 pageRef = "/posts"
 
@@ -70,11 +64,11 @@ pageRef = "/posts"
 
 
 # [[footer]]
-#   name = "Tags"
-#   pageRef = "tags"
+#   name = ""
+#   pageRef = "https://beian.mps.gov.cn/#/query/webSearch"
 #   weight = 10
 
 # [[footer]]
-#   name = "Categories"
-#   pageRef = "categories"
-#   weight = 20
+# name = ""
+# pageRef = "https://beian.miit.gov.cn/"
+# weight = 20
