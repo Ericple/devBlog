@@ -1,0 +1,30 @@
+<svg width="216.000000" height="216.000000" viewBox="0 0 216 216" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<filter id="filter_388_1_dd" x="61.899780" y="47.850452" width="94.029785" height="128.678406" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="0"/>
+			<feGaussianBlur stdDeviation="1.66667"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<clipPath id="clip718_18">
+			<rect id="app_icon" rx="45.000000" width="216.000000" height="216.000000" transform="translate(0.000000 0.000007)" fill="white" fill-opacity="0"/>
+		</clipPath>
+		<linearGradient x1="108.000000" y1="0.000007" x2="108.000000" y2="216.000000" id="paint_linear_718_18_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#0A59F7"/>
+			<stop offset="1.000000" stop-color="#2C79F4"/>
+		</linearGradient>
+	</defs>
+	<rect id="app_icon" rx="45.000000" width="216.000000" height="216.000000" transform="translate(0.000000 0.000007)" fill="url(#paint_linear_718_18_0)" fill-opacity="1.000000"/>
+	<g clip-path="url(#clip718_18)">
+		<g filter="url(#filter_388_1_dd)">
+			<path id="合并" d="M109.091 84.9151L83.3596 55.5541C80.4474 52.2313 75.4205 51.9296 72.1315 54.8803L69.5811 57.1683C66.2922 60.119 65.9866 65.2046 68.8987 68.5274L86.8409 89L76.9999 89C72.5817 89 68.9999 92.5817 68.9999 97L68.9999 101C68.9999 105.418 72.5817 109 76.9999 109L99.244 109C99.1676 109.444 99.1279 109.9 99.1279 110.366L99.1279 117L76.9999 117C72.5817 117 68.9999 120.582 68.9999 125L68.9999 128C68.9999 132.418 72.5817 136 76.9999 136L99.1279 136L99.1279 163.529C99.1279 167.947 102.71 171.529 107.128 171.529L110.512 171.529C114.931 171.529 118.512 167.947 118.512 163.529L118.512 136L141 136C145.418 136 149 132.418 149 128L149 125C149 120.582 145.418 117 141 117L118.512 117L118.512 110.366C118.512 109.9 118.473 109.444 118.396 109L141 109C145.418 109 149 105.418 149 101L149 97C149 92.5817 145.418 89 141 89L131.342 89L148.931 68.9307C151.843 65.6079 151.537 60.5223 148.248 57.5716L145.698 55.2837C142.409 52.333 137.382 52.6348 134.47 55.9576L109.091 84.9151Z" clip-rule="evenodd" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="evenodd"/>
+		</g>
+	</g>
+</svg>
