@@ -9,6 +9,7 @@ cascade:
 ---
 
 {{< lead >}}
+![img](img/app_icon_one_bill.svg)
 了解如何使用简单而专业的个人记账软件《一日记账》
 {{< /lead >}}
 
