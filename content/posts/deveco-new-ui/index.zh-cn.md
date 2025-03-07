@@ -25,7 +25,7 @@ tags = ["美化"]
 
 ![check-experimental-ui](img/check-experimental-ui.png)
 
-- 点击"确认"并重启IDE
+- 点击"关闭"并重启IDE
 
 ## 恢复顶栏工具配置
 
@@ -40,4 +40,4 @@ tags = ["美化"]
 
 ![deveco-setting-ap-right](img/deveco-setting-ap-right.png)
 
-- 按照图示顺序添加工具即可
+- 按照图示顺序添加工具即可，单击上方加号，选择"添加操作..."即可按图中名称搜索组件。
