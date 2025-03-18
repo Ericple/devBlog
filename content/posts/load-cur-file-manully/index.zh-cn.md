@@ -160,7 +160,3 @@ export async function loadCurFileToBase64(uri: string) {
     return d;
 }
 ```
-
-
-
-未完待续
