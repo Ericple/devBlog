@@ -89,6 +89,78 @@ BMP信息头作为图像数据的开头，占用40个字节，其中有11条数�
 | 32     | 4     | 调色板颜色数                 |
 | 36     | 4     | 重要颜色数                   |
 
+## cur文件读取
+
+> 由于从场景出发，插件内的基本都是1bit黑白双色图标，因此这里只做双色读取示范，其它调色板的以后有空再补充吧（笑
+
+废话不多，直接上代码吧
+
+```
+/**
+ * 以二进制方式读取cur文件并解析为Base64编码的图像数据
+ */
+export async function loadCurFileToBase64(uri: string) {
+    const ui8 = await readFile(uri); // 读取为Uint8Array，如果你可以直接读取为ArrayBuffer的话也可以直接读为ArrayBuffer，反正后面也要转换
+    const buffer = ui8.buffer; // 因为我读取为Uint8Array，所以这里直接使用buffer转换为ArrayBuffer
+    const header = new DataView(buffer.slice(0, 6)); // 通过分割buffer的前6个字节，获取文件头信息
+    const dir = new DataView(buffer.slice(6, 22)); // 接下来的16个字节为文件目录信息
+    const imageDataOffset = dir.getUint32(12, true); // 获取图像数据的偏移量
+    const bmpHeader = new DataView(buffer.slice(imageDataOffset, imageDataOffset + 40)); // 获取位图头信息
+    const imageBuffer = new DataView(buffer.slice(imageDataOffset + 40)); // 获取图像数据
+    const fileType = header.getUint16(2, true); // 获取文件类型，由于ico和cur是共用一种的，为了确保这里只加载cur文件，可以使用这个类型字节来判断是否需要加载
+    const imageContain = header.getUint16(4, true); // 获取图像包含的图像数量，这个不重要，一般情况下都是1，我们也先不管这个，读出来备用
+    if (fileType != 2 || imageContain == 0) { // 判断文件类型是否正确，以及是否包含图像数据
+        throw new Error(`File is not typeof cur or contains no image data.`);
+    }
+    const width = dir.getUint8(0); // 获取图像宽度
+    const height = dir.getUint8(1); // 获取图像高度
+    const palletColorCount = bmpHeader.getUint32(32, true); // 获取调色板颜色数量
+    const colorPallet: IColor[] = []; // 初始化调色板颜色数组，用于存储调色板颜色信息
+    for (let i = 0; i < palletColorCount; i++) { // 读取调色板颜色，调色板以BGR(A或0)的顺序存储，我也不知道为什么第四位全都是0，如果你的第四位不是0的话，可以把第四位当作alpha读取
+        const offset = i * 4;
+        const b = imageBuffer.getUint8(offset);
+        const g = imageBuffer.getUint8(offset + 1);
+        const r = imageBuffer.getUint8(offset + 2);
+        colorPallet.push({r, g, b});
+    }
+    const bytesPerRow = Math.ceil(width / 8); // 一个像素用一个bit表示，每个字节有8个像素，计算每行的字节数
+    const paddedBytesPerRow = bytesPerRow + (4 - (bytesPerRow % 4)) % 4; // 由于每行字节必须是4的倍数，当字节数不是4的倍数时，需要填充0，因此需要计算填充后每行的字节数
+    const imageDataClamped = new Uint8ClampedArray(4 * width * height);
+    const pixelOffset = palletColorCount * 4;// 调色板数据4个字节一组，计算占用的字节数，用于找到像素数据的偏移量
+    for (let y = 0; y < height; y++) { // 逐个像素读取
+        for (let x = 0; x < width; x++) {
+            const byteIndex = Math.floor(x / 8);
+            const bitIndex = 7 - (x % 8);
+            const byte = imageBuffer.getUint8(pixelOffset + y * paddedBytesPerRow + byteIndex);
+            const pixelValue = (byte >> bitIndex) & 1; // 像素值指向调色板中的索引
+            const color = colorPallet[pixelValue]; // 根据索引获取颜色
+            if (color == undefined) continue; // 如果颜色无效，则跳过当前像素
+            const imageDataOffset = ((height - y - 1) * width + x) * 4;
+            imageDataClamped[imageDataOffset] = color.r;
+            imageDataClamped[imageDataOffset + 1] = color.g;
+            imageDataClamped[imageDataOffset + 2] = color.b;
+            if (pixelValue == 0) // 这里是额外的代码，用于将黑色像素设置为透明，以满足光标显示需求。如果你没有这个需求，这个if可以不写，直接设置为255即可。
+                imageDataClamped[imageDataOffset + 3] = 0;
+            else
+                imageDataClamped[imageDataOffset + 3] = 255;
+        }
+    }
+    // 下面的代码就是正常调用canvas，将图像数据绘制后转换为base64.
+    const imageData = new ImageData(imageDataClamped, width, height);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (ctx == null) throw new Error("Can't load context from canvas");
+    canvas.width = width;
+    canvas.height = height;
+    ctx.putImageData(imageData, 0, 0);
+    const d = new CursorB64();
+    d.value = canvas.toDataURL("image/png"); // 获取base64数据
+    d.centerX = width / 2;
+    d.centerY = height / 2;
+    return d;
+}
+```
+
 
 
 未完待续
