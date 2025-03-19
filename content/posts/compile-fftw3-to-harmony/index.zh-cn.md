@@ -37,51 +37,80 @@ FFTW由麻省理工的[Matteo Frigo](https://www.fftw.org/~athena/)和[Steven G.
 
 如果你确实没有安装，你可以去[这里](https://developer.huawei.com/consumer/cn/download/)下载最新的IDE，里面包含了最新的SDK。
 
-### 准备toolchain.cmake
+### 编译
 
-为了让编译工具知道我们要交叉编译，我们需要告诉编译工具我们使用的编译工具链、编译目标系统、目标架构等信息。
-
-在fftw源码路径下新建一个`toolchain.cmake`文件，往里面添加这些内容
-
-```cmake
-# 设置目标系统
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR arm)
-
-# 设置系统根目录，里面放着依赖库
-set(CMAKE_SYSROOT /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/sysroot)
-set(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
-
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)  # 不在 sysroot 中查找程序
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)   # 只在 sysroot 中查找库
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)   # 只在 sysroot 中查找头文件
-
-# 告诉cmake我们要使用harmony os的llvm工具链进行编译，这里根据你的实际位置替换路径
-set(CMAKE_C_COMPILER /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm/bin/clang)
-set(CMAKE_CXX_COMPILER /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm/bin/clang++)
-
-set(CMAKE_C_FLAGS "--target=arm-linux-ohosmusl")
-set(CMAKE_CXX_FLAGS "--target=arm-linux-ohosmusl")
-```
-
-保存后，即可准备进行编译。
-
-## 编译
-
-编译的过程就很简单了，首先在fftw源码路径下新建一个文件夹，用于存放你的预构建产物，然后进入这个文件夹
+为了避免污染，我们新建一个文件夹用于存放编译配置
 
 ```bash
-mkdir build
-cd build
+mkdir build_ohos
+cd build_ohos
 ```
 
-然后调用cmake，别忘了我们刚才写的`toolchain.cmake`，在这时候要用到
+我们可以使用SDK包含的cmake来生成交叉编译的配置文件
+
+假设你的SDK路径为`/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony`，则我们可以直接运行以下命令
 
 ```bash
-cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain.cmake ..
+/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/build-tools/cmake/bin/cmake -DCMAKE_TOOLCHAIN_FILE=/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake -DOHOS_ARCH=arm64-v8a .. -L
 ```
 
-等待cmake运行完成，预构建产物生成完毕，即可开make，make完后在你新建的文件夹下就可以看到
-`libfftw3.so`/`libfftw3.so.3`/`libfftw3.so.3.6.9`，中间那个就是本体。
+这条命令使用了SDK内置的cmake和ohos.toolchain.cmake配置，生成对应的配置文件。生成完毕后，我们在`build_ohos`目录下直接运行`make`命令即可开始构建。
 
-> 未完待续
+![fftw-compile](img/fftw-compile-result.png)
+
+## 测试
+
+我们新建一个支持native的工程，将构建出来的三个.so产物放到工程下的libs文件夹内，然后从`fftw3`目录下找到`fftw3.h`头文件并放入`src/main/cpp`下。
+
+![fftw-pl](img/fftw-project-libs.png) ![fftw-ph](img/fftw-project-headers.png)
+
+编写一个测试函数，测试我们的编译产物是否有效
+
+> 这里我借用了aki的语法糖简化代码，如果你看不太懂，可以参考[@ohos/aki](https://gitcode.com/openharmony-sig/aki)
+
+```c
+#include <aki/jsbind.h>
+#include <fftw3.h>
+#include <cmath>
+#define LOG_DOMAIN 0xF010
+#define LOG_TAG "MUSIC_SHEET"
+#include <hilog/log.h>
+
+auto fftw_test()->bool {
+    int i;
+    fftw_complex *din, *out;
+    fftw_plan p;
+    din=(fftw_complex*)fftw_malloc(sizeof(fftw_complex)*5);
+    out=(fftw_complex*)fftw_malloc(sizeof(fftw_complex)*5);
+    if((din==NULL)||(out==NULL))return false;
+    for(i=0;i<5;i++){
+        din[i][0]=i+1;
+        din[i][1]=0;
+    }
+    p=fftw_plan_dft_1d(5,din,out,FFTW_FORWARD,FFTW_ESTIMATE);
+    fftw_execute(p);
+    fftw_destroy_plan(p);
+    fftw_cleanup();
+    for(i=0;i<5;i++){
+        OH_LOG_DEBUG(LogType::LOG_APP,"fftw native input %{public}f %{public}f",out[i][0], out[i][1]);
+    }
+    for(i=0;i<5;i++){
+        OH_LOG_DEBUG(LogType::LOG_APP,"fftw native output %{public}f %{public}f",out[i][0], out[i][1]);
+    }
+    if(din!=NULL)fftw_free(din);
+    if(out!=NULL)fftw_free(out);
+    return true;
+}
+
+JSBIND_ADDON(libfft);
+
+JSBIND_GLOBAL() {
+    JSBIND_FUNCTION(fftw_test);
+}
+```
+
+## 结果
+
+查看输出结果一切正常，至此交叉编译移植fftw库已完成
+
+![fftw-result](img/fftw-result-log.png)
