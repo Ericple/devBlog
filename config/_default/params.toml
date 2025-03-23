@@ -21,7 +21,7 @@ disableImageOptimization = false
 disableTextInHeader = false
 # backgroundImageWidth = 1200
 
-# defaultBackgroundImage = "IMAGE.jpg" # used as default for background images 
+# defaultBackgroundImage = "IMAGE.jpg" # used as default for background images
 # defaultFeaturedImage = "IMAGE.jpg" # used as default for featured images in all articles
 
 # highlightCurrentMenuArea = true
@@ -54,10 +54,10 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
 
 [article]
   showDate = true
-  showViews = false
-  showLikes = false
+  showViews = true
+  showLikes = true
   showDateOnlyInArticle = false
-  showDateUpdated = false
+  showDateUpdated = true
   showAuthor = false
   # showAuthorBottom = false
   showHero = true
@@ -73,7 +73,7 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   showHeadingAnchors = true
   showPagination = true
   invertPagination = false
-  showReadingTime = true
+  showReadingTime = false
   showTableOfContents = true
   # showRelatedContent = true
   # relatedContentLimit = 3
